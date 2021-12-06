@@ -52,7 +52,7 @@
       var startD, endD, startU, endU, pings = [];
       axios({
         method: "POST",
-        url: "https://speedtest.d3tu.repl.co/file.test",
+        url: window.location.origin + "/file.test",
         onDownloadProgress: function({ total, loaded }) {
           if (startD === undefined) endD = startD = Date.now();
           pings.push(Date.now() - endD);
