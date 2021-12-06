@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Speedtest</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2&display=swap" rel="stylesheet">
+	<style>
+		body {
+			font-family: 'Baloo Bhaijaan 2', cursive;
+			text-align: center;
+			background-color: black;
+			color: white;
+		}
+
+		button {
+			border: none;
+			padding: 10px;
+			border-radius: 12.5px;
+		}
+
+		h1 {
+			text-decoration: underline;
+		}
+
+		button,
+		body,
+		h1,
+		p {
+			margin: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Speedtest</h1>
+	<button onclick="run(this)">RUN</button>
+  <br />
+  <p id="u">Upload: 0 mbps</p>
+  <p id="d">Download: 0 mbps</p>
+  <p id="l">Latency: 0 ms</p>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+  <script>
+    var u = document.querySelector("#u"),
+      d = document.querySelector("#d"),
+      l = document.querySelector("#l");
+    function run(e) {
+      e.disabled = true;
+      var startD, endD, startU, endU, pings = [];
+      axios({
+        method: "POST",
+        url: "https://speedtest.d3tu.repl.co/file.test",
+        onDownloadProgress: function({ total, loaded }) {
+          if (startD === undefined) endD = startD = Date.now();
+          pings.push(Date.now() - endD);
+          endD = Date.now();
+          d.textContent = "Download: " + ((((loaded * 8) / ((endD - startD) / 1000)) / 1024) / 1024).toFixed(2) + " mbps";
+        },
+        onUploadProgress: function({ total, loaded }) {
+          if (startU === undefined) endU = startU = Date.now();
+          pings.push(Date.now() - endU);
+          endU = Date.now();
+          u.textContent = "Upload: " + ((((loaded * 8) / ((endU - startU) / 1000)) / 1024) / 1024).toFixed(2) + " mbps";
+        },
+        data: new ArrayBuffer(10485760)
+      }).then(function() {
+        l.textContent = "Latency: " + Math.round(pings.reduce((a, b) => a + b, 0) / pings.length) + " ms";
+        e.disabled = false;
+      }).catch(function() {
+        e.disabled = false;
+      });
+    }
+  </script>
+</body>
+
+</html>
