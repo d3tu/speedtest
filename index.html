@@ -55,7 +55,7 @@
       else if (speed > 10) speed = 10;
       axios({
         method: "POST",
-        url: window.location.origin + "/file.test?size=" + (speed * 10),
+        url: window.location.origin + "/file.test?size=" + Math.floor((speed * 10) / 2),
         onDownloadProgress: function({ total, loaded }) {
           if (startD === undefined) endD = startD = Date.now();
           pings.push(Date.now() - endD);
@@ -70,7 +70,6 @@
         },
         data: new ArrayBuffer(Math.floor(10485760 * (0.1 * speed)))
       }).then(function(res) {
-        console.log(res);
         l.textContent = "Latency: " + Math.floor(pings.reduce((a, b) => a + b, 0) / pings.length) + " ms";
         e.disabled = false;
       }).catch(function() {
