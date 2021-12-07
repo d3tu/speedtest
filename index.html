@@ -47,7 +47,7 @@
     var u = document.querySelector("#u"),
       d = document.querySelector("#d"),
       l = document.querySelector("#l");
-    function run(e) {
+    async function run(e) {
       e.disabled = true;
       var startD, endD, startU, endU,
         pings = [], buffer = new ArrayBuffer(10485760),
