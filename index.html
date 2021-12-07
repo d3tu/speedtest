@@ -68,7 +68,7 @@
           endU = Date.now();
           u.textContent = "Upload: " + ((((loaded * 8) / ((endU - startU) / 1000)) / 1024) / 1024).toFixed(2) + " mbps (" + percent + "%)";
         },
-        data: new ArrayBuffer(Math.floor(10485760 * (0.01 * speed)))
+        data: new ArrayBuffer(Math.floor(10485760 * (0.1 * speed)))
       }).then(function(res) {
         l.textContent = "Latency: " + Math.floor(pings.reduce((a, b) => a + b, 0) / pings.length) + " ms";
         e.disabled = false;
