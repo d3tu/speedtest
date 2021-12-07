@@ -78,11 +78,9 @@
         e.disabled = false;
       });
       var writer = writableStream.getWriter();
-      writer.ready().then(async function() {
-        var i = speed;
-        while(i--) await writer.write(buffer);
-        writer.close();
-      });
+      var i = speed;
+      while(i--) await writer.write(buffer);
+      writer.close();
     }
   </script>
 </body>
