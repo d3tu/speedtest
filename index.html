@@ -49,11 +49,8 @@
       l = document.querySelector("#l");
     async function run(e) {
       e.disabled = true;
-      var startD, endD, startU, endU,
-        pings = [], buffer = new ArrayBuffer(10485760),
-        speed = Math.floor(navigator.connection.downlink),
-        writableStream = new WritableStream(),
-        writer = writableStream.getWriter();
+      var startD, endD, startU, endU, pings = [],
+        speed = Math.floor(navigator.connection.downlink);
       if (speed < 1) speed = 1;
       else if (speed > 10) speed = 10;
       axios({
@@ -71,16 +68,14 @@
           endU = Date.now();
           u.textContent = "Upload: " + ((((loaded * 8) / ((endU - startU) / 1000)) / 1024) / 1024).toFixed(2) + " mbps";
         },
-        data: writer
-      }).then(function() {
+        data: new ArrayBuffer(Math.floor(10485760 * (0.1 * speed)))
+      }).then(function(res) {
+        console.log(res);
         l.textContent = "Latency: " + Math.floor(pings.reduce((a, b) => a + b, 0) / pings.length) + " ms";
         e.disabled = false;
       }).catch(function() {
         e.disabled = false;
       });
-      var i = speed;
-      while(i--) await writer.write(buffer);
-      writer.close();
     }
   </script>
 </body>
