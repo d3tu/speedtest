@@ -52,7 +52,7 @@
       var startD, endD, startU, endU, pings = [];
       axios({
         method: "POST",
-        url: window.location.origin + "/file.test",
+        url: window.location.origin + "/file.test?size=" + Math.floor(navigator.connection.downlink * 10),
         onDownloadProgress: function({ total, loaded }) {
           if (startD === undefined) endD = startD = Date.now();
           pings.push(Date.now() - endD);
@@ -67,7 +67,7 @@
         },
         data: new ArrayBuffer(10485760)
       }).then(function() {
-        l.textContent = "Latency: " + Math.round(pings.reduce((a, b) => a + b, 0) / pings.length) + " ms";
+        l.textContent = "Latency: " + Math.floor(pings.reduce((a, b) => a + b, 0) / pings.length) + " ms";
         e.disabled = false;
       }).catch(function() {
         e.disabled = false;

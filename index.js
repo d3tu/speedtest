@@ -7,8 +7,17 @@ app.get('/', (_req, res) => res.sendFile(__dirname + '/index.html'));
 
 app.post('/file.test', (req, res) => {
   req.once('data', () => void 0);
-  req.once('end', () => {
-    res.set({ 'content-length': size });
+  req.once('end', async () => {
+    let sizeQ = req.query['size'], stop;
+    if (isNaN(sizeQ) || sizeQ < 1 || sizeQ > 100) sizeQ = 1;
+    res.set({ 'content-length': size * (0.1 * sizeQ) });
+    while (--sizeQ) {
+      if (stop) break;
+      await new Promise(next => res.write(buffer, err => {
+        if (err) stop = true;
+        setTimeout(next, 1);
+      }));
+    }
     res.end(buffer);
   });
 });
